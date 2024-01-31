@@ -1,0 +1,128 @@
+{% extends "auctions/layout.html" %}
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="card view-card">
+            {% if listing.listing_image %}
+            <img class="view-image" src="{{ listing.listing_image.url }}" alt="">
+            {% else %}
+            <img class="view-image" src="https://placehold.co/600x400?text=No image available" alt="No image available">
+            {% endif %}
+            <!-- end of image statment -->
+            <div class="card-body">
+                <h5 class="card-title">{{ listing.title }}
+                    {% if listing.inactive == "False" %}
+                    <span class="badge rounded-pill text-bg-success">active</span>
+                    {% else %}
+                    <span class="badge rounded-pill text-bg-secondary">inactive</span>
+                    {% endif %}
+                    <!-- end of active listing statment -->
+                </h5>
+                <h6>Description:</h6>
+                <p class="card-text">{{ listing.description }}</p>
+                <h6>Price:</h6>
+                <p>${{ listing.price }}</p>
+                <figcaption class="blockquote-footer">
+                    Listed by: {{ listing.owner }}
+                </figcaption>
+                <figcaption class="blockquote-footer">
+                    Created at: {{ listing.created }}
+                </figcaption>
+                <figcaption class="blockquote-footer">
+                    Updated at: {{ listing.updated }}
+                </figcaption>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div>
+            <!-- start of user check -->
+            {% if username == listing.owner %}
+            {% if listing.inactive == "False" %}
+            <a href="{% url 'edit' listing.id %}">Edit</a>
+            <a href="{% url 'delete' listing.id %}">Delete</a>
+            <a href="{% url 'end' listing.id %}">End</a>
+            {% endif %}
+            {% elif request.user.username != listing.owner %}
+            {% if listing.inactive == "False" %}
+            {% if user.is_authenticated %}
+            <a href="{% url 'add_watchlist' listing.id %}">Add to Watchlist</a>
+            <a href="{% url 'unwatch' listing.id %}">Unwatch</a>
+            {% endif %}
+            <a href="{% url 'comment' listing.id %}">Comment</a>
+        </div>
+        {% if listing.auction_item == True %}
+        <div id="bid-form">
+            <form class="form-control" action="{% url 'view' listing.id %}" method="post">
+                <p>{{ listing.bids_placed.count }} bids so far</p>
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input class="btn btn-primary" type="submit" value="Bid">
+            </form>
+        </div>
+        {% else %}
+        <div>
+            <div>
+                <a class="btn btn-primary" href="{% url 'buy' listing.id %}">Buy Now</a>
+            </div>
+            {% endif %}
+            {% if messages %}
+            {% for message in messages %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+            </div>
+            {% else %}
+            <div class="alert alert-warning" role="alert">
+                {{ message }}
+            </div>
+            {% endif %}
+            <!-- end of message tags statment -->
+            {% endfor %}
+            <!-- end of messages loop -->
+            {% endif %}
+            <!-- end of messages statment -->
+        </div>
+        {% else %}
+        <div class="alert alert-danger" role="alert">
+            The listing is no longer active.
+            {% if listing.auction_item == False %}
+            {% if messages %}
+            {% for message in messages %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+            {{ message }}
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            {% else %}
+            {{ high.bidder}} won the auction.
+            {% endif %}
+        </div>
+        {% endif %}
+        {% endif %}
+        <div class="row card-body">
+            <!-- comments -->
+            <h4>{{ listing.comments.count }} Comments</h4>
+            {% for comment in listing.comments.all %}
+            <div class="comments">
+                <em>
+                    <p class="font-weight-bold">
+                        {{ comment.comment_title }}
+                    </p>
+                </em>
+                <blockquote class="blockquote">
+                    {{ comment.comment_input | linebreaks }}
+                </blockquote>
+                <figcaption class="blockquote-footer">
+                    {{ comment.comment_created }}
+                    {{ comment.comment_owner}}
+                </figcaption>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- end of listing statment @ h5  -->
+{% endblock %}

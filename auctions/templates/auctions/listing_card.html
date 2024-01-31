@@ -1,0 +1,26 @@
+<div class="row" class="index-card">
+    <div class="col-6">
+        <h5><a href="{% url 'view' listing.id %}">{{ listing.title }}</a>
+            {% if status == "active" %}
+            <span class="badge rounded-pill text-bg-success">active</span>
+            {% elif status == "inactive" %}
+            <span class="badge rounded-pill text-bg-warning">Inactive</span>
+            {% endif %}
+        </h5>
+        <p>{{ listing.description }}</p>
+        <p><strong>Price:</strong> ${{ listing.price }}</p>
+        <figcaption class="blockquote-footer">
+            Listed by: {{ listing.owner }}
+        </figcaption>
+        <figcaption class="blockquote-footer">
+            Created at: {{ listing.created }}
+        </figcaption>
+    </div>
+    <div class="col-6">
+        {% if listing.listing_image %}
+        <img class="index-image" src="{{ listing.listing_image.url }}" alt="">
+        {% else %}
+        <img class="index-image" src="https://placehold.co/600x400?text=No image available" alt="No image available">
+        {% endif %}
+    </div>
+</div>

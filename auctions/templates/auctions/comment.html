@@ -1,0 +1,22 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<h2>Create new listing:</h2>
+<div>
+    <form action="{% url 'comment' listing.id %}" method="POST">
+        {% csrf_token %}
+        <!-- to style form, a for loop over the fields is needed -->
+        {% for field in form %}
+        <div class="form-group">
+            <div>{{ field.label }}</div>
+            <div>{{ field }}</div>
+        </div>
+        {% endfor %}
+        <input class="btn btn-primary" type="submit" value="Save" name="save">
+        <input class="btn btn-primary" type="submit" value="Cancel" name="cancel">
+    </form>
+     
+</div>
+
+
+{% endblock %}

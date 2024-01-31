@@ -1,1 +1,2 @@
-# auction
+# commerce
+commerce Django project.

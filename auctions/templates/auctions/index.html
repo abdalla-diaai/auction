@@ -1,0 +1,21 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<div class="container" id="index-cards">
+    <h2>Active Listings</h2>
+    {% for listing in listings %}
+    {% if listing.title in active_listings %}
+    {% include "auctions/listing_card.html" with listing=listing status="active" %}
+    {% endif %}
+    {% endfor %}
+
+    <h2>Inactive Listings</h2>
+    {% for listing in listings %}
+    {% if listing.title in inactive_listings %}
+    {% include "auctions/listing_card.html" with listing=listing status="inactive" %}
+    {% endif %}
+    {% endfor %}
+</div>
+
+{% endblock %}

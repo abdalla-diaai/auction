@@ -1,0 +1,21 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<h2>Watch List</h2>
+{% if messages %}
+{% for message in messages %}
+{% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+<div class="alert alert-primary" role="alert">
+    {{ message }}
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% for listing in watchlist.listingitems.all %}
+<!-- to access manytomany field, returned from function -->
+<ul>
+    <li><a href="{% url 'view' listing.id %}">{{ listing.title }}</a></li>
+</ul>
+{% endfor %}
+{% endblock %}
